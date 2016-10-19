@@ -4,11 +4,12 @@ import com.nibado.example.spark.sentiment.Score;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Locale;
 
-import static com.nibado.example.spark.Comment.Sentiment.NEGATIVE;
-import static com.nibado.example.spark.Comment.Sentiment.NEUTRAL;
-import static com.nibado.example.spark.Comment.Sentiment.POSTIVE;
+import static com.nibado.example.spark.Comment.Sentiment.*;
 import static com.nibado.example.spark.Mappers.toDateString;
 
 @Data
@@ -41,6 +42,10 @@ public class Comment implements Serializable {
 
     public double normalizedScore() {
         return (double) score.getScore() / (double)score.getWords();
+    }
+
+    public LocalDateTime getDateTime() {
+        return LocalDateTime.ofInstant(new Date(timeStamp * 1000).toInstant(), ZoneId.systemDefault());
     }
 
     public enum Sentiment {

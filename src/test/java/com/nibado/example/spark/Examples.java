@@ -21,13 +21,9 @@ public class Examples implements Serializable {
     private static final SparkConf CONFIG_EIGHT = new SparkConf().setAppName("HelloSparkWorld").setMaster("local[8]");
     private static final SparkConf CONFIG_ONE = new SparkConf().setAppName("HelloSparkWorld").setMaster("local[1]");
 
-    private static final JavaSparkContext SC;
+    private static JavaSparkContext sparkContext;
 
     private Analyser analyser = new Analyser();
-
-    static {
-        SC = new JavaSparkContext(CONFIG_EIGHT);
-    }
 
     @BeforeClass
     public static void beforeClass() {
@@ -47,14 +43,14 @@ public class Examples implements Serializable {
     @Test
     public void countLines() {
         long start = System.currentTimeMillis();
-        System.out.println(SC.textFile(SMALL_SAMPLE).count());
+        System.out.println(ctx().textFile(SMALL_SAMPLE).count());
         System.out.println(System.currentTimeMillis() - start);
     }
 
     @Test
     public void printComments() {
         long start = System.currentTimeMillis();
-        long count = SC
+        long count = ctx()
                 .textFile(SMALL_SAMPLE)
                 .map(Mappers::toComment)
                 .filter(c -> !c.isDeleted())
@@ -66,7 +62,7 @@ public class Examples implements Serializable {
 
     private JavaRDD<Comment> comments() {
         log.info("Reading comments from {}", SMALL_SAMPLE);
-        return SC
+        return ctx()
                 .textFile(SMALL_SAMPLE)
                 .map(Mappers::toComment)
                 .filter(c -> !c.isDeleted())
@@ -120,5 +116,12 @@ public class Examples implements Serializable {
                 .collect();
 
         writeTuples(results, "subPositive.csv");
+    }
+
+    public static JavaSparkContext ctx() {
+        if(sparkContext == null) {
+            sparkContext = new JavaSparkContext(CONFIG_EIGHT);
+        }
+        return sparkContext;
     }
 }
