@@ -4,6 +4,9 @@ import com.nibado.example.spark.sentiment.Analyser;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 
+/**
+ * Analyse comments and write to object file.
+ */
 public class Example2 {
     /*
         Add analyser

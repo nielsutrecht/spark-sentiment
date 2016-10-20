@@ -4,6 +4,9 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+/**
+ * Prints subreddit totals
+ */
 public class Example4 {
     /*
         Read object file

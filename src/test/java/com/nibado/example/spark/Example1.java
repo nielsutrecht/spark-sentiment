@@ -3,6 +3,9 @@ package com.nibado.example.spark;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 
+/**
+ * Demonstrates reading a file, printing contents, mapping to Java object and filtering.
+ */
 public class Example1 {
     /*
         Read textFile

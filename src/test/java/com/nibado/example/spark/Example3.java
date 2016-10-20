@@ -4,6 +4,9 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 
+/**
+ * Reads an object file and counts the total amount of comments
+ */
 public class Example3 {
     /*
         Read object file

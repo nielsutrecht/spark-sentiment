@@ -10,6 +10,9 @@ import scala.Tuple4;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Prints the subreddits with total, negative and positive counts.
+ */
 public class Example5 {
     /*
         RDDs for total, positive, negative
