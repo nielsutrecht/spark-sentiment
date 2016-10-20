@@ -12,10 +12,13 @@ import scala.Tuple2;
 import java.io.Serializable;
 import java.util.List;
 
-import static com.nibado.example.spark.Csv.writeTuples;
+import static com.nibado.example.spark.Csv.writeTuple2;
 
 @Slf4j
 public class Examples implements Serializable {
+    public static final String OBJECT_FILE = "target/object-file";
+    public static final String OBJECT_FILE_SMALL = System.getProperty("user.home") + "/data/object-file-small";
+
     public static final String BIG_FILE = System.getProperty("user.home") + "/data/RC_2015-01.bz2";
     public static final String SMALL_SAMPLE = System.getProperty("user.home") + "/data/RC_2015-01-small/part*";
     private static final SparkConf CONFIG_EIGHT = new SparkConf().setAppName("HelloSparkWorld").setMaster("local[8]");
@@ -44,6 +47,13 @@ public class Examples implements Serializable {
     public void countLines() {
         long start = System.currentTimeMillis();
         System.out.println(ctx().textFile(SMALL_SAMPLE).count());
+        System.out.println(System.currentTimeMillis() - start);
+    }
+
+    @Test
+    public void countLines2() {
+        long start = System.currentTimeMillis();
+        System.out.println(ctx().objectFile(OBJECT_FILE).count());
         System.out.println(System.currentTimeMillis() - start);
     }
 
@@ -79,7 +89,7 @@ public class Examples implements Serializable {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, "subPositive.csv");
+        writeTuple2(results, "subPositive.csv");
     }
 
     @Test
@@ -92,7 +102,7 @@ public class Examples implements Serializable {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, "subNegative.csv");
+        writeTuple2(results, "subNegative.csv");
     }
 
     @Test
@@ -107,7 +117,7 @@ public class Examples implements Serializable {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, "subNegative.csv");
+        writeTuple2(results, "subNegative.csv");
 
         results = comments
                 .filter(c -> c.getSentiment() == Comment.Sentiment.POSTIVE)
@@ -115,7 +125,7 @@ public class Examples implements Serializable {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, "subPositive.csv");
+        writeTuple2(results, "subPositive.csv");
     }
 
     public static JavaSparkContext ctx() {

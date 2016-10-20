@@ -33,7 +33,7 @@ public class SparkFacade {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "subPositive.csv"));
+        writeTuple2(results, new File(output, "subPositive.csv"));
 
         results = comments
                 .filter(AnalysedComment::isNegative)
@@ -41,14 +41,14 @@ public class SparkFacade {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "subNegative.csv"));
+        writeTuple2(results, new File(output, "subNegative.csv"));
 
         results = comments
                 .mapToPair(c -> new Tuple2<>(c.getSubReddit(), 1))
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "subTotal.csv"));
+        writeTuple2(results, new File(output, "subTotal.csv"));
 
         results = comments
                 .filter(AnalysedComment::isNegative)
@@ -56,7 +56,7 @@ public class SparkFacade {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "dayNegative.csv"));
+        writeTuple2(results, new File(output, "dayNegative.csv"));
 
         results = comments
                 .filter(AnalysedComment::isPositive)
@@ -64,21 +64,21 @@ public class SparkFacade {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "dayPositive.csv"));
+        writeTuple2(results, new File(output, "dayPositive.csv"));
 
         results = comments
                 .mapToPair(c -> new Tuple2<>(toDayOfWeek(c.getDateTime()), 1))
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "dayTotal.csv"));
+        writeTuple2(results, new File(output, "dayTotal.csv"));
 
         results = comments
                 .mapToPair(c -> new Tuple2<>(c.getAuthor(), 1))
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "authorTotal.csv"));
+        writeTuple2(results, new File(output, "authorTotal.csv"));
 
 
         results = comments
@@ -87,12 +87,12 @@ public class SparkFacade {
                 .reduceByKey((a, b) -> a + b)
                 .collect();
 
-        writeTuples(results, new File(output, "wordTotal.csv"));
+        writeTuple2(results, new File(output, "wordTotal.csv"));
 
 
     }
 
-    public static void writeTuples(List<Tuple2<String, Integer>> list, File file) {
+    public static void writeTuple2(List<Tuple2<String, Integer>> list, File file) {
         LOG.info("Writing {} tuples to {}", list.size(), file.getAbsolutePath());
         final PrintWriter outs;
         try {
