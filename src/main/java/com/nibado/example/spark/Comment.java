@@ -1,7 +1,9 @@
 package com.nibado.example.spark;
 
 import com.nibado.example.spark.sentiment.Score;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,6 +15,8 @@ import static com.nibado.example.spark.Comment.Sentiment.*;
 import static com.nibado.example.spark.Mappers.toDateString;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment implements Serializable {
     public static final long serialVersionUID = 1L;
     private String subReddit;

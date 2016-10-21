@@ -1,6 +1,7 @@
 package com.nibado.example.spark;
 
 import com.nibado.example.spark.sentiment.Analyser;
+import com.nibado.example.spark.sentiment.Score;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaRDD;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import scala.Tuple2;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.nibado.example.spark.Csv.writeTuple2;
@@ -128,10 +130,52 @@ public class Examples implements Serializable {
         writeTuple2(results, "subPositive.csv");
     }
 
+    @Test
+    public void testSort() {
+        List<Comment> comments = Arrays.asList(
+                comment("suba", "john", "foo bar baz"),
+                comment("suba", "jack", "foo bar baz"),
+                comment("suba", "jane", "foo bar baz"),
+                comment("suba", "jill", "foo bar baz"),
+                comment("subb", "john", "foo bar baz"),
+                comment("subb", "jack", "foo bar baz"),
+                comment("subb", "jane", "foo bar baz"),
+                comment("subb", "jill", "foo bar baz"),
+                comment("subb", "jerry", "foo bar baz"),
+                comment("subc", "john", "foo bar baz"),
+                comment("subc", "jack", "foo bar baz"),
+                comment("subc", "jane", "foo bar baz"),
+                comment("subc", "jill", "foo bar baz"),
+                comment("subc", "jerry", "foo bar baz"),
+                comment("subc", "jonah", "foo bar baz"),
+                comment("subd", "john", "foo bar baz"),
+                comment("subd", "jack", "foo bar baz"),
+                comment("subd", "jane", "foo bar baz"),
+                comment("subd", "jill", "foo bar baz"),
+                comment("subd", "jerry", "foo bar baz"),
+                comment("subd", "jonah", "foo bar baz")
+        );
+        JavaRDD<Comment> rdd = ctx().parallelize(comments);
+
+        rdd.mapToPair(c -> new Tuple2<>(c.getSubReddit(), 1))
+                .reduceByKey((a, b) -> a + b)
+                .mapToPair(Tuple2::swap)
+                .sortByKey(false)
+                .mapToPair(Tuple2::swap)
+                .take(3)
+                .forEach(System.out::println);
+    }
+
     public static JavaSparkContext ctx() {
         if(sparkContext == null) {
             sparkContext = new JavaSparkContext(CONFIG_EIGHT);
         }
         return sparkContext;
+    }
+
+    private static Comment comment(String subReddit, String author, String text) {
+        String[] words = text.split("//W+");
+        return new Comment(subReddit, author, System.currentTimeMillis(), text, false, words,
+                new Score((int)(System.currentTimeMillis() % 10) - 5, words.length));
     }
 }
