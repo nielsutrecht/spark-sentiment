@@ -13,9 +13,9 @@ public class Example1 {
         Take 100 output
         Map to comment
         Filter deleted
-        Take 100
         Add analyser
-        Write Objectfile
+        Take 100
+        Print all
      */
     public static void main(String... argv) {
         JavaSparkContext sc = new JavaSparkContext(
@@ -27,42 +27,11 @@ public class Example1 {
 
         Analyser analyser = new Analyser();
 
-        sc.textFile(input)
-                .map(Mappers::toComment)
-                .filter(c -> !c.isDeleted())
-                .map(c -> { analyser.analyse(c);return c;})
-                .take(100).forEach(System.out::println);
+        sc.textFile(input);
 
         sc.close();
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -81,8 +50,14 @@ public class Example1 {
 
         String input = System.getProperty("user.home") + "/data/RC_2015-01.bz2";
 
+        Analyser analyser = new Analyser();
+
         sc.textFile(input)
                 .map(Mappers::toComment)
                 .filter(c -> !c.isDeleted())
-                .take(100).forEach(System.out::println);
+                .map(c -> { analyser.analyse(c);return c;})
+                .take(100)
+                .forEach(System.out::println);
+
+        sc.close();
  */

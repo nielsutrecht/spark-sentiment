@@ -1,4 +1,4 @@
-package com.nibado.example.spark.example;
+package com.nibado.example.spark;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.SparkConf;
