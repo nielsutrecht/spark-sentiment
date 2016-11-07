@@ -22,6 +22,11 @@ public class Example1 {
 
         String input = System.getProperty("user.home") + "/data/RC_2015-01.bz2";
 
+        sc.textFile(input)
+                .map(Mappers::toComment)
+                .filter(c -> !c.isDeleted())
+                .take(100).forEach(System.out::println);
+
         sc.close();
     }
 }

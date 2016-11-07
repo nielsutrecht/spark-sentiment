@@ -16,14 +16,6 @@ import static com.nibado.example.spark.Mappers.toDayOfWeek;
  * Prints the days of the week with total, negative and positive counts.
  */
 public class Example6 {
-    /*
-        RDDs for total, positive, negative
-        Join all 3
-        Map to Tuple4
-        Collect
-        Sort
-        Print top 4
-     */
     public static void main(String... argv) {
         JavaSparkContext sc = new JavaSparkContext(
                 new SparkConf()
@@ -54,7 +46,7 @@ public class Example6 {
         List<Tuple4<String, Integer, Integer, Integer>> results = totals
                 .join(negative)
                 .join(positive)
-                .map(t -> new Tuple4<>(t._1(), t._2._1._1,  t._2._1._2, t._2._2))
+                .map(t -> new Tuple4<>(t._1, t._2._1._1,  t._2._1._2, t._2._2))
                 .collect();
 
         results = new ArrayList<>(results);

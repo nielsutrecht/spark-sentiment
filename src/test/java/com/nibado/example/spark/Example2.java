@@ -25,7 +25,9 @@ public class Example2 {
 
         sc.textFile(input)
                 .map(Mappers::toComment)
-                .filter(c -> !c.isDeleted());
+                .filter(c -> !c.isDeleted())
+                .map(c -> { analyser.analyse(c);return c;})
+                .saveAsObjectFile(output);
 
         sc.close();
     }

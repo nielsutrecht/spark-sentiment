@@ -52,7 +52,8 @@ public class Example5 {
         List<Tuple4<String, Integer, Integer, Integer>> results = totals
                 .join(negative)
                 .join(positive)
-                .map(t -> new Tuple4<>(t._1(), t._2._1._1,  t._2._1._2, t._2._2))
+                .map(t -> new Tuple4<>(t._1, t._2._1._1,  t._2._1._2, t._2._2))
+                //.map(t -> new Tuple4<>(t._2(), t._1(), t._3(), t._4()))
                 .collect();
 
         results = new ArrayList<>(results);
