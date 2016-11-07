@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Prints author totals
  */
-public class Example7 {
+public class Example4 {
     public static void main(String... argv) {
         JavaSparkContext sc = new JavaSparkContext(
                 new SparkConf()

@@ -15,7 +15,7 @@ import static com.nibado.example.spark.Mappers.toDayOfWeek;
 /**
  * Prints the days of the week with total, negative and positive counts.
  */
-public class Example6 {
+public class Example3 {
     public static void main(String... argv) {
         JavaSparkContext sc = new JavaSparkContext(
                 new SparkConf()
