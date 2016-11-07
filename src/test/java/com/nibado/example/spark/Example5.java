@@ -5,10 +5,8 @@ import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import scala.Tuple2;
+import scala.Tuple3;
 import scala.Tuple4;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Prints the subreddits with total, negative and positive counts.
@@ -49,18 +47,13 @@ public class Example5 {
                 .reduceByKey((a, b) -> a + b)
                 .filter(t -> t._2() > 10000);
 
-        List<Tuple4<String, Integer, Integer, Integer>> results = totals
+        totals
                 .join(negative)
                 .join(positive)
-                .map(t -> new Tuple4<>(t._1, t._2._1._1,  t._2._1._2, t._2._2))
-                //.map(t -> new Tuple4<>(t._2(), t._1(), t._3(), t._4()))
-                .collect();
-
-        results = new ArrayList<>(results);
-
-        results.stream()
-                .sorted((a, b) -> Integer.compare(b._2(), a._2()))
-                .limit(25)
+                .mapToPair(t -> new Tuple2<>(t._2._1._1, new Tuple3<>(t._1, t._2._2, t._2._1._2)))
+                .sortByKey(false)
+                .map(t -> new Tuple4<>(t._2()._1(), t._1(), t._2()._2(), t._2()._3()))
+                .take(25)
                 .forEach(System.out::println);
 
         sc.close();
@@ -131,17 +124,13 @@ public class Example5 {
                 .reduceByKey((a, b) -> a + b)
                 .filter(t -> t._2() > 10000);
 
-        List<Tuple4<String, Integer, Integer, Integer>> results = totals
+        totals
                 .join(negative)
                 .join(positive)
-                .map(t -> new Tuple4<>(t._1(), t._2._1._1,  t._2._1._2, t._2._2))
-                .collect();
-
-        results = new ArrayList<>(results);
-
-        results.stream()
-                .sorted((a, b) -> Integer.compare(b._2(), a._2()))
-                .limit(25)
+                .mapToPair(t -> new Tuple2<>(t._2._1._1, new Tuple3<>(t._1, t._2._2, t._2._1._2)))
+                .sortByKey(false)
+                .map(t -> new Tuple4<>(t._2()._1(), t._1(), t._2()._2(), t._2()._3()))
+                .take(25)
                 .forEach(System.out::println);
 
         sc.close();

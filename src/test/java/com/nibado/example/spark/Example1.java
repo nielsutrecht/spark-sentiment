@@ -1,5 +1,6 @@
 package com.nibado.example.spark;
 
+import com.nibado.example.spark.sentiment.Analyser;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 
@@ -13,6 +14,8 @@ public class Example1 {
         Map to comment
         Filter deleted
         Take 100
+        Add analyser
+        Write Objectfile
      */
     public static void main(String... argv) {
         JavaSparkContext sc = new JavaSparkContext(
@@ -22,9 +25,12 @@ public class Example1 {
 
         String input = System.getProperty("user.home") + "/data/RC_2015-01.bz2";
 
+        Analyser analyser = new Analyser();
+
         sc.textFile(input)
                 .map(Mappers::toComment)
                 .filter(c -> !c.isDeleted())
+                .map(c -> { analyser.analyse(c);return c;})
                 .take(100).forEach(System.out::println);
 
         sc.close();
